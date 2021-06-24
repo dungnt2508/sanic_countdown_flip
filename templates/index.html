@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width">
+    <title>Flip Example Preset</title>
+
+    <link rel="stylesheet" href="./flip/flip.min.css">
+
+</head>
+<body>
+
+
+<style>
+    .tick {
+        padding-bottom: 1em;
+        font-size:1rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    
+    .tick-label {
+        font-size:.375em;
+        text-align:center;
+    }
+
+    .tick-group {
+        margin:0 .25em;
+        text-align:center;
+    }
+</style>
+
+<div class="tick"
+     data-value="{{ totalContract }}"
+     data-did-init="setupFlip">
+     <!--
+     The aria-hidden attribute below hides
+     the tick content from screenreaders
+     -->
+    <div data-repeat="true" data-layout="horizontal center" aria-hidden="true">
+        <span data-view="flip"></span>
+    </div>
+</div>
+
+<script>
+	function setupFlip(tick) {
+
+	    Tick.helper.interval(function() {
+
+	        tick.value = tick.value - {{ newTotalContract }}
+
+	        // The aria-label attribute is used
+	        // instead of the actual tick
+	        // content
+	        tick.root.setAttribute(
+	            'aria-label',
+	            tick.value
+	        );
+
+	    }, 60000);
+
+}
+</script>
+
+<script src="./flip/flip.min.js"></script>
+
+</body>
+</html>
