@@ -96,14 +96,14 @@
 
 .tick [data-layout~=horizontal][data-layout~=fit] {
 	display: -ms-inline-flexbox;
-	display: inline-flex;
+	/*display: inline-flex;*/
 	-ms-flex-wrap: nowrap;
 	flex-wrap: nowrap;
 	-ms-flex-line-pack: center;
 	align-content: center;
 	white-space: nowrap;
 	-ms-flex-pack: start;
-	justify-content: flex-start
+	/*justify-content: flex-start*/
 }
 
 .tick [data-layout~=vertical] {
@@ -301,8 +301,7 @@
 	left: 0;
 	top: 0;
 	right: 0;
-	height: 100%;
-	font-size: xxx-large;
+	height: 100%
 }
 
 .tick-flip-panel-back-text .tick-flip-panel-text-wrapper {
@@ -408,8 +407,7 @@
 .tick-flip {
 	margin-left: .0625em;
 	margin-right: .0625em;
-	min-width: 4em;
-	min-height: 5em;
+	min-width: 1.125em;
 	border-radius: .125em;
 	letter-spacing: .25em;
 	text-indent: .25em

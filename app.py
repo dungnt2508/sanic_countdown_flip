@@ -1,5 +1,5 @@
 from sanic import Sanic
-from sanic.response import html
+from sanic.response import html, json
 from jinja2 import Environment, PackageLoader
 
 from sqlalchemy import create_engine
@@ -19,12 +19,27 @@ async def index(request):
     cur = db.execute("exec PBI_GetTotalContractActive")
     row = cur.fetchall()
 
+    for i in row:
+        print(i)
+
     db.close()
 
     template = env.get_template('index.html')
-    html_content = template.render(totalContract=(2000000 + row[0][1] - row[0][0]), newTotalContract=row[0][1])
+    html_content = template.render(totalContract=row[0][0])
 
     return html(html_content)
+
+
+@app.route('/get_count')
+async def get_count(request):
+    db = create_engine(conn_uri).connect()
+
+    cur = db.execute("exec PBI_GetTotalContractActive")
+    row = cur.fetchall()
+
+    db.close()
+
+    return json ({'newTotalContract':row[0][0]})
 
 
 if __name__ == '__main__':
