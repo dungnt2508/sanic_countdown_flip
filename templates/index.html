@@ -1,135 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width">
-    <title>Chiến dịch 2M</title>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <title>Chiến dịch 2M</title>
+     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="./static/style.css">
+	 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="./flip/flip.min.css">
-	<link rel="stylesheet" href="./flip/flipclock.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-
-
-
-</head>
-<body>
-
-
-<style>
-    .tick {
-        padding-bottom: 1em;
-        font-size:1rem;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    }
-    
-    .tick-label {
-        font-size:.375em;
-        text-align:center;
-    }
-
-    .tick-group {
-        margin:0 .25em;
-        text-align:center;
-    }
-    .tick-flip {
-        font-size:60px;
-    }
-
-    .time-frame {
-	    background-color: #333232;
-	    color: #edebeb;
-	    width: 300px;
-	    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-	    text-align:center;
-	}
-
-	.time-frame > div {
-	    width: 100%;
-	    text-align: center;
-	}
-
-	#date-part {
-	    font-size: 1.2em;
-	}
-	#time-part {
-	    font-size: 2em;
-	}
-</style>
-<form>
-	<div class="hero-body">
-		<div class="container has-text-centered">
-			<div class="box">
-				<div class='time-frame'>
-				    <div id='date-part'></div>
-				    <div id='time-part'></div>
-				</div>
-
-
-				<div class="tick"
-				     data-value="{{ totalContract }}"
-				     data-did-init="setupFlip">
-
-				    <div data-repeat="true" data-layout="horizontal center fit" aria-hidden="true">
-				        <span data-view="flip"></span>
-				    </div>
-
-				</div>
-			</div>
-		</div>
-	</div>
-</form>
-
+ </head>
+ <body>
+    <div id="campain_2m">
+		<h1>Chiến Dịch 2M</h1>
+         <div id="box_count">
+             <div>
+                 <span id="box">{{ totalContract }}</span>
+	             <span id="current_time">{{ current_time }}</span>
+             </div>
+         </div>
+     </div>
+ </body>
 <script>
-	function setupFlip(tick) {
 
-	    Tick.helper.interval(function() {
 
-	        $.ajax({
+    function get_box() {
+         var box = document.getElementById("box");
+         $.ajax({
 		        url: "/get_count",
 		        type: "GET",
 		        dataType: "json",
 		        success: function(resp){
 		            console.log(resp)
-		            tick.value = resp.newTotalContract
+		            box.innerHTML = resp.newTotalContract
 		        },
 		        error: function(resp){
 		            console.log(resp)
 		        }
 		    })
-
-
-	        tick.root.setAttribute(
-	            'aria-label',
-	            tick.value
-	        );
-
-	    }, 15000);
-
-}
-</script>
-
-<script>
-			$(document).ready(function() {
-		    var interval = setInterval(function() {
-		        var momentNow = moment();
-		        $('#date-part').html(momentNow.format('YYYY MMMM DD') + ' '
-		                            + momentNow.format('dddd')
-		                             .substring(0,3).toUpperCase());
-		        $('#time-part').html(momentNow.format('A hh:mm:ss'));
-	        }, 100);
-
-<!--		    $('#stop-interval').on('click', function() {-->
-<!--		        clearInterval(interval);-->
-<!--		    });-->
-		});
-</script>
-
-<script src="./flip/flip.min.js"></script>
-<script src="./flip/flipclock.js"></script>
-<script src="./flip/moment.js"></script>
-
-</body>
-</html>
+     }
+     function get_time() {
+         var current_time = document.getElementById("current_time");
+         var today = new Date();
+         var month = today.getMonth()+1;
+		 var hours = today.getHours();
+		 var minutes = today.getMinutes();
+		 var seconds = today.getSeconds();
+		 if (month < "10") { month = "0" + month; }
+		 if (hours < "10") { hours = "0" + hours; }
+		 if (minutes < "10") { minutes = "0" + minutes; }
+		 if (seconds < "10") { seconds = "0" + seconds; }
+         var date = today.getDate() + '/' + month + '/' + today.getFullYear() + ' ' + hours + ":" + minutes + ":" + seconds;
+         current_time.innerHTML = date
+     }
+    var countdown_box = setInterval(get_box, 15000);
+    var current_time = setInterval(get_time, 1000);
+ </script>
+ </html>
