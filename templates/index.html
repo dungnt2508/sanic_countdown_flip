@@ -8,52 +8,100 @@
      <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
      <link rel="stylesheet" href="./static/style.css">
 	 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	 <link rel="stylesheet" href="./static/flip.min.css">
 
  </head>
  <body>
-    <div id="campain_2m">
-		<h1>Chiến Dịch 2M</h1>
+ <style>
+    .tick {
+        padding-bottom: 1em;
+        font-size:3em;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+
+    .tick-label {
+        font-size:2em;
+        text-align:center;
+        width:600px;
+        height: 160px;
+    }
+
+    .tick-group {
+        margin:0 .25em;
+        text-align:center;
+        width:600px;
+        height: 160px;
+    }
+</style>
+
+	 <div class="tick" id="campain_2m"
+	     data-value={{ totalContract }}
+	     data-did-init="get_box">
+	     <!--
+	     The aria-hidden attribute below hides
+	     the tick content from screenreaders
+	     -->
+		 <h6> Chiến dịch 2M</h6>
+	    <div data-repeat="true" aria-hidden="true">
+	        <span data-view="flip"></span>
+	    </div>
+
          <div id="box_count">
              <div>
-                 <span id="box">{{ totalContract }}</span>
 	             <span id="current_time">{{ current_time }}</span>
              </div>
          </div>
      </div>
+
+	</div>
  </body>
 <script>
 
-
-    function get_box() {
-         var box = document.getElementById("box");
-         $.ajax({
-		        url: "/get_count",
-		        type: "GET",
-		        dataType: "json",
-		        success: function(resp){
-		            console.log(resp)
-		            box.innerHTML = resp.newTotalContract
-		        },
-		        error: function(resp){
-		            console.log(resp)
-		        }
-		    })
-     }
      function get_time() {
-         var current_time = document.getElementById("current_time");
-         var today = new Date();
-         var month = today.getMonth()+1;
-		 var hours = today.getHours();
-		 var minutes = today.getMinutes();
-		 var seconds = today.getSeconds();
-		 if (month < "10") { month = "0" + month; }
-		 if (hours < "10") { hours = "0" + hours; }
-		 if (minutes < "10") { minutes = "0" + minutes; }
-		 if (seconds < "10") { seconds = "0" + seconds; }
-         var date = today.getDate() + '/' + month + '/' + today.getFullYear() + ' ' + hours + ":" + minutes + ":" + seconds;
-         current_time.innerHTML = date
+            {% if totalContract > 0 %}
+	         var current_time = document.getElementById("current_time");
+	         var today = new Date();
+	         var month = today.getMonth()+1;
+			 var hours = today.getHours();
+			 var minutes = today.getMinutes();
+			 var seconds = today.getSeconds();
+			 if (month < "10") { month = "0" + month; }
+			 if (hours < "10") { hours = "0" + hours; }
+			 if (minutes < "10") { minutes = "0" + minutes; }
+			 if (seconds < "10") { seconds = "0" + seconds; }
+	         var date = today.getDate() + '/' + month + '/' + today.getFullYear() + ' ' + hours + ":" + minutes + ":" + seconds;
+	         current_time.innerHTML = date
+
+	        {% endif %}
+
+
      }
-    var countdown_box = setInterval(get_box, 15000);
-    var current_time = setInterval(get_time, 1000);
+
+     var current_time = setInterval(get_time, 1000);
+
+
+    function get_box(tick) {
+
+
+	    Tick.helper.interval(function() {
+
+	        $.ajax({
+			        url: "/get_count",
+			        type: "GET",
+			        dataType: "json",
+			        success: function(resp){
+			            console.log(resp)
+			            tick.value = resp.newTotalContract
+			        },
+			        error: function(resp){
+			            console.log(resp)
+			        }
+			})
+
+	    }, 15000);
+
+
+	}
  </script>
+<script src="./static/flip.min.js"></script>
  </html>
